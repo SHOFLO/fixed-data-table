@@ -73,6 +73,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       '__DEV__': JSON.stringify(isDev || true)
+      //'process.env.NODE_ENV': JSON.stringify("production"),
+      //'__DEV__': JSON.stringify(false)
     }),
     resolvers.resolveHasteDefines,
   ]

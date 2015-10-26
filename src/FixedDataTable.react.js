@@ -805,7 +805,6 @@ var FixedDataTable = React.createClass({
     if (this._rowToScrollTo !== undefined) {
 
       scrollState =
-        //this._scrollHelper.scrollToRow(this._rowToScrollTo, 100);
         this._scrollHelper.scrollRowIntoView(this._rowToScrollTo);
       firstRowIndex = scrollState.index;
       firstRowOffset = scrollState.offset;

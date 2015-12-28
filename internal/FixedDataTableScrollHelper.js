@@ -263,11 +263,10 @@ var FixedDataTableScrollHelper = (function () {
      */
   }, {
     key: 'scrollToRow',
-    value: function scrollToRow( /*number*/rowIndex, /*number*/offset) /*object*/{
+    value: function scrollToRow( /*number*/rowIndex) /*object*/{
       rowIndex = clamp(0, rowIndex, Math.max(this._rowCount - 1, 0));
-      offset = clamp(-this._storedHeights[rowIndex], offset, 0);
       var firstRow = this._rowOffsets.sumUntil(rowIndex);
-      return this.scrollTo(firstRow - offset);
+      return this.scrollTo(firstRow - 60);
     }
 
     /**

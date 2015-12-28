@@ -387,11 +387,65 @@ var FixedDataTable = React.createClass({
     var newOverflowY = nextProps.overflowY;
     if (newOverflowX !== this.props.overflowX || newOverflowY !== this.props.overflowY) {
       this._wheelHandler = new ReactWheelHandler(this._onWheel, newOverflowX !== 'hidden', // Should handle horizontal scroll
-      newOverflowY !== 'hidden' // Should handle vertical scroll
+        newOverflowY !== 'hidden' // Should handle vertical scroll
       );
     }
 
-    this.setState(this._calculateState(nextProps, this.state));
+    var nextState = this._calculateState(nextProps, this.state);
+
+    if (this.state.scrollY !== nextState.scrollY) {
+
+      var scrollAmount = 60;
+
+      if (nextState.scrollY > this.state.scrollY) {
+        this._easeScroll(0, (scrollAmount * -1));
+      } else {
+        this._easeScroll((scrollAmount * -1), 0);
+      }
+
+      delete nextState.firstRowOffset;
+    }
+
+    this.setState(nextState);
+  },
+
+  _easeScroll: function(start, end) {
+
+    // get how far the container is already scrolled, plus
+    // the distance from the top of the viewport the next cue is at
+    // then subtract 200 and then some, which is the height of the header
+    // do a bit more so the previous cue is slightly visible
+    // then, reset the `container.scrollTop` property
+
+    var currentValue;
+    var iterationCount = 0; // the current frame
+    var change = end - start;
+    var totalIterations = 60 / 2; // ~60 animation frames/sec
+
+    var self = this;
+
+    (function scrollWithEase() {
+      iterationCount++;
+
+      currentValue = easeInOutQuad(iterationCount, start, change, totalIterations);
+
+      //console.log(currentValue);
+
+      self.setState({
+        firstRowOffset: currentValue
+      });
+
+      if (iterationCount >= totalIterations) return;
+
+      window.requestAnimationFrame(scrollWithEase);
+    }());
+
+    function easeInOutQuad(currentIteration, startValue, changeInValue, totalIterations) {
+      if ((currentIteration /= totalIterations / 2) < 1) {
+        return changeInValue / 2 * currentIteration * currentIteration + startValue;
+      }
+      return -changeInValue / 2 * ((--currentIteration) * (currentIteration - 2) - 1) + startValue;
+    }
   },
 
   componentDidUpdate: function componentDidUpdate() {
@@ -585,13 +639,13 @@ var FixedDataTable = React.createClass({
    * location on the table.
    */
   _onColumnResize: function _onColumnResize(
-  /*number*/combinedWidth,
-  /*number*/leftOffset,
-  /*number*/cellWidth,
-  /*?number*/cellMinWidth,
-  /*?number*/cellMaxWidth,
-  /*number|string*/columnKey,
-  /*object*/event) {
+    /*number*/combinedWidth,
+    /*number*/leftOffset,
+    /*number*/cellWidth,
+    /*?number*/cellMinWidth,
+    /*?number*/cellMaxWidth,
+    /*number|string*/columnKey,
+    /*object*/event) {
     this.setState({
       isColumnResizing: true,
       columnResizingData: {
@@ -707,7 +761,7 @@ var FixedDataTable = React.createClass({
     }
 
     if (this._rowToScrollToWithOffset !== undefined) {
-      scrollState = this._scrollHelper.scrollToRow(this._rowToScrollToWithOffset, 300);
+      scrollState = this._scrollHelper.scrollToRow(this._rowToScrollToWithOffset, 600);
       firstRowIndex = scrollState.index;
       firstRowOffset = scrollState.offset;
       scrollY = scrollState.position;
@@ -717,8 +771,8 @@ var FixedDataTable = React.createClass({
     if (this._rowToScrollTo !== undefined) {
 
       scrollState =
-      //this._scrollHelper.scrollToRow(this._rowToScrollTo, 100);
-      this._scrollHelper.scrollRowIntoView(this._rowToScrollTo);
+        //this._scrollHelper.scrollToRow(this._rowToScrollTo, 100);
+        this._scrollHelper.scrollRowIntoView(this._rowToScrollTo);
       firstRowIndex = scrollState.index;
       firstRowOffset = scrollState.offset;
       scrollY = scrollState.position;

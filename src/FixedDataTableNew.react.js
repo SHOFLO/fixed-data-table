@@ -357,6 +357,12 @@ var FixedDataTable = React.createClass({
   },
 
   componentWillReceiveProps(/*object*/ nextProps) {
+
+    var scrollToRowWithOffset = nextProps.scrollToRowWithOffset;
+    if (scrollToRowWithOffset !== undefined && scrollToRowWithOffset !== null) {
+      this._rowToScrollToWithOffset = scrollToRowWithOffset;
+    }
+
     var scrollToRow = nextProps.scrollToRow;
     if (scrollToRow !== undefined && scrollToRow !== null) {
       this._rowToScrollTo = scrollToRow;
@@ -760,6 +766,15 @@ var FixedDataTable = React.createClass({
       firstRowIndex = scrollState.index;
       firstRowOffset = scrollState.offset;
       scrollY = scrollState.position;
+    }
+
+    if (this._rowToScrollToWithOffset !== undefined) {
+      scrollState =
+        this._scrollHelper.scrollToRow(this._rowToScrollToWithOffset, 300);
+      firstRowIndex = scrollState.index;
+      firstRowOffset = scrollState.offset;
+      scrollY = scrollState.position;
+      delete this._rowToScrollToWithOffset;
     }
 
     if (this._rowToScrollTo !== undefined) {

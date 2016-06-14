@@ -372,7 +372,61 @@ var FixedDataTable = React.createClass({
     }
     this._didScrollStop();
 
-    this.setState(this._calculateState(nextProps, this.state));
+    var nextState = this._calculateState(nextProps, this.state);
+
+    if (this.state.scrollY !== nextState.scrollY) {
+
+      var scrollAmount = 60;
+
+      if (nextState.scrollY > this.state.scrollY) {
+        this._easeScroll(0, scrollAmount * -1);
+      } else {
+        this._easeScroll(scrollAmount * -1, 0);
+      }
+
+      delete nextState.firstRowOffset;
+    }
+
+    this.setState(nextState);
+  },
+
+  _easeScroll: function _easeScroll(start, end) {
+
+    // get how far the container is already scrolled, plus
+    // the distance from the top of the viewport the next cue is at
+    // then subtract 200 and then some, which is the height of the header
+    // do a bit more so the previous cue is slightly visible
+    // then, reset the `container.scrollTop` property
+
+    var currentValue;
+    var iterationCount = 0; // the current frame
+    var change = end - start;
+    var totalIterations = 60 / 2; // ~60 animation frames/sec
+
+    var self = this;
+
+    (function scrollWithEase() {
+      iterationCount++;
+
+      currentValue = easeInOutQuad(iterationCount, start, change, totalIterations);
+
+      //console.log(currentValue);
+
+      self.setState({
+        firstRowOffset: currentValue
+      });
+
+      if (iterationCount >= totalIterations) return;
+
+      window.requestAnimationFrame(scrollWithEase);
+    })();
+
+    function easeInOutQuad(currentIteration, startValue, changeInValue, totalIterations) {
+      if ((currentIteration /= totalIterations / 2) < 1) {
+        return changeInValue / 2 * currentIteration * currentIteration + startValue;
+      }
+      return -changeInValue / 2 * (--currentIteration * (currentIteration - 2) - 1) + startValue;
+    }
   },
 
   componentDidUpdate: function componentDidUpdate() {

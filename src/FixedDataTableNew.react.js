@@ -394,12 +394,13 @@ var FixedDataTable = React.createClass({
 
     if (this.state.scrollY !== nextState.scrollY) {
 
-      var scrollAmount = 60;
+      var baseScrollAmount = 50,
+        scrollAmount = baseScrollAmount + 60;
 
       if (nextState.scrollY > this.state.scrollY) {
-        this._easeScroll(0, (scrollAmount * -1));
+        this._easeScroll(baseScrollAmount, (scrollAmount * -1));
       } else {
-        this._easeScroll((scrollAmount * -1), 0);
+        this._easeScroll((scrollAmount * -1), baseScrollAmount);
       }
 
       delete nextState.firstRowOffset;

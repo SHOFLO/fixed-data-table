@@ -394,7 +394,7 @@ var FixedDataTable = React.createClass({
     if (newOverflowX !== this.props.overflowX ||
         newOverflowY !== this.props.overflowY) {
       this._wheelHandler = new ReactWheelHandler(
-        this._onWheel,
+        this._onScroll,
         newOverflowX !== 'hidden', // Should handle horizontal scroll
         newOverflowY !== 'hidden' // Should handle vertical scroll
       );
@@ -410,7 +410,7 @@ var FixedDataTable = React.createClass({
     var nextState = this._calculateState(nextProps, this.state);
 
     if (this.state.scrollY !== nextState.scrollY) {
-      
+
       var baseScrollAmount = 50,
         scrollAmount = baseScrollAmount + 60;
 
@@ -1056,7 +1056,7 @@ var FixedDataTable = React.createClass({
     };
   },
 
-  _onWheel(/*number*/ deltaX, /*number*/ deltaY) {
+  _onScroll(/*number*/ deltaX, /*number*/ deltaY) {
     if (this.isMounted()) {
       if (!this._isScrolling) {
         this._didScrollStart();

@@ -301,7 +301,7 @@ var FixedDataTable = React.createClass({
       this._columnToScrollTo = scrollToColumn;
     }
 
-    var touchEnabled = this.state.touchScrollEnabled === true;
+    var touchEnabled = true;
 
     this._wheelHandler = new ReactWheelHandler(
       this._onScroll,
@@ -397,6 +397,11 @@ var FixedDataTable = React.createClass({
         this._onScroll,
         newOverflowX !== 'hidden', // Should handle horizontal scroll
         newOverflowY !== 'hidden' // Should handle vertical scroll
+      );
+      this._touchHandler = new ReactTouchHandler(
+        this._onScroll,
+        newOverflowX !== 'hidden', // Should handle horizontal scroll
+        newOverflowY !== 'hidden'// Should handle vertical scroll
       );
     }
 
@@ -643,6 +648,8 @@ var FixedDataTable = React.createClass({
           cx('public/fixedDataTable/main'),
         )}
         onWheel={this._wheelHandler.onWheel}
+        onTouchStart={this._touchHandler.onTouchStart}
+        onTouchMove={this._touchHandler.onTouchMove}
         style={{height: state.height, width: state.width}}>
         <div
           className={cx('fixedDataTableLayout/rowsContainer')}

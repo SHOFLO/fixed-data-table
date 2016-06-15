@@ -16,6 +16,7 @@
 var React = require('React');
 var ReactComponentWithPureRenderMixin = require('ReactComponentWithPureRenderMixin');
 var ReactWheelHandler = require('ReactWheelHandler');
+var ReactTouchHandler = require('ReactTouchHandler');
 var Scrollbar = require('Scrollbar.react');
 var FixedDataTableBufferedRows = require('FixedDataTableBufferedRows.react');
 var FixedDataTableColumnResizeHandle = require('FixedDataTableColumnResizeHandle.react');
@@ -129,6 +130,12 @@ var FixedDataTable = React.createClass({
 
     overflowX: PropTypes.oneOf(['hidden', 'auto']),
     overflowY: PropTypes.oneOf(['hidden', 'auto']),
+
+    /**
+     * Boolean flag indicating of touch scrolling should be enabled
+     * This feature is current in beta and may have bugs
+     */
+    touchScrollEnabled: PropTypes.bool,
 
     /**
      * Number of rows in the table.
@@ -293,11 +300,21 @@ var FixedDataTable = React.createClass({
     if (scrollToColumn !== undefined && scrollToColumn !== null) {
       this._columnToScrollTo = scrollToColumn;
     }
+
+    var touchEnabled = this.state.touchScrollEnabled === true;
+
     this._wheelHandler = new ReactWheelHandler(
-      this._onWheel,
+      this._onScroll,
       this._shouldHandleWheelX,
       this._shouldHandleWheelY
     );
+
+    this._touchHandler = new ReactTouchHandler(
+      this._onScroll,
+      touchEnabled && this._shouldHandleWheelX,
+      touchEnabled && this._shouldHandleWheelY
+    );
+
   },
 
   _shouldHandleWheelX(/*number*/ delta) /*boolean*/ {

@@ -97,15 +97,49 @@ class ReactTouchHandler {
     }
 
     if (changed === true && this._animationFrameID === null) {
-      this._animationFrameID = requestAnimationFramePolyfill(this._didTouchMove);
+      this._didTouchMove()
     }
+    //if (changed === true && this._animationFrameID === null) {
+    //  this._animationFrameID = requestAnimationFramePolyfill(this._didTouchMove);
+    //}
   }
 
   _didTouchMove() {
-    this._animationFrameID = null;
-    this._onTouchScrollCallback(this._deltaX, this._deltaY);
-    this._deltaX = 0;
-    this._deltaY = 0;
+    //this._animationFrameID = null;
+    //this._onTouchScrollCallback(this._deltaX, this._deltaY);
+
+    var currentX;
+    var currentY;
+    var iterationCount = 0; // the current frame
+    var self = this;
+
+    var totalIterations = 60 / 2; // ~60 animation frames/sec
+
+    (function scrollWithEase() {
+      iterationCount++;
+
+      currentX = easeInOutQuad(iterationCount, self._startX, self._deltaX, totalIterations);
+      currentY = easeInOutQuad(iterationCount, self._startY, self._deltaY, totalIterations);
+
+      self._onTouchScrollCallback(currentX, currentY);
+
+      if (iterationCount >= totalIterations) {
+        self._deltaX = 0;
+        self._deltaY = 0;
+        self._animationFrameID = null;
+        return;
+      }
+
+      self._animationFrameID = requestAnimationFramePolyfill(scrollWithEase);
+    }());
+
+    function easeInOutQuad(currentIteration, startValue, changeInValue, totalIterations) {
+      if ((currentIteration /= totalIterations / 2) < 1) {
+        return changeInValue / 2 * currentIteration * currentIteration + startValue;
+      }
+      return -changeInValue / 2 * ((--currentIteration) * (currentIteration - 2) - 1) + startValue;
+    }
+
   }
 }
 

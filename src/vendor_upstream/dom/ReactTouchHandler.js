@@ -121,7 +121,7 @@ class ReactTouchHandler {
       currentX = easeInOutQuad(iterationCount, self._startX, self._deltaX, totalIterations);
       currentY = easeInOutQuad(iterationCount, self._startY, self._deltaY, totalIterations);
 
-      self._onTouchScrollCallback(currentX, currentY);
+      self._onTouchScrollCallback(currentX - self._startX, currentY - self._startY);
 
       if (iterationCount >= totalIterations) {
         self._deltaX = 0;

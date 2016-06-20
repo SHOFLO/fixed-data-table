@@ -935,7 +935,6 @@ var FixedDataTable = React.createClass({
         this._didScrollStart();
       }
       var x = this.state.scrollX;
-      console.log(deltaY)
       if (Math.abs(deltaY) > Math.abs(deltaX) && this.props.overflowY !== 'hidden') {
         var scrollState = this._scrollHelper.scrollBy(Math.round(deltaY));
         var maxScrollY = Math.max(0, scrollState.contentHeight - this.state.bodyHeight);

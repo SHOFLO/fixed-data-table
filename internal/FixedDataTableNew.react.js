@@ -426,8 +426,6 @@ var FixedDataTable = React.createClass({
 
       currentValue = easeInOutQuad(iterationCount, start, change, totalIterations);
 
-      //console.log(currentValue);
-
       self.setState({
         firstRowOffset: currentValue
       });

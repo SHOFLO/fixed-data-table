@@ -119,21 +119,13 @@ var ReactTouchHandler = (function () {
 
       var totalIterations = 60 / 2; // ~60 animation frames/sec
 
-      if (Math.abs(self._deltaY) < 20 && Math.abs(self._deltaX) < 20) {
-        console.log('not easing..');
-        self._onTouchScrollCallback(self._deltaX, self._deltaY);
-        self._deltaX = 0;
-        self._deltaY = 0;
-        return;
-      }
-
       (function scrollWithEase() {
         iterationCount++;
 
         currentX = easeInOutQuad(iterationCount, self._startX, self._deltaX, totalIterations);
         currentY = easeInOutQuad(iterationCount, self._startY, self._deltaY, totalIterations);
 
-        self._onTouchScrollCallback(currentX, currentY);
+        self._onTouchScrollCallback(currentX - self._startX, currentY - self._startY);
 
         if (iterationCount >= totalIterations) {
           self._deltaX = 0;

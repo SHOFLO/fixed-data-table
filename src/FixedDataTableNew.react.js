@@ -448,7 +448,7 @@ var FixedDataTable = React.createClass({
     var currentValue;
     var iterationCount = 0; // the current frame
     var change = end - start;
-    var totalIterations = 60 / 2; // ~60 animation frames/sec
+    var totalIterations = 12 / 2; // ~12 animation frames/sec
 
     var self = this;
 

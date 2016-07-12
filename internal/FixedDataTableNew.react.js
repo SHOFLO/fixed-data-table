@@ -361,6 +361,10 @@ var FixedDataTable = React.createClass({
       this._rowToScrollToWithOffset = scrollToRowWithOffset;
     }
 
+    if (scrollToRowWithOffset === undefined) {
+      delete this._rowToScrollToWithOffset;
+    }
+
     var scrollToRow = nextProps.scrollToRow;
     if (scrollToRow !== undefined && scrollToRow !== null) {
       this._rowToScrollTo = scrollToRow;
@@ -389,7 +393,7 @@ var FixedDataTable = React.createClass({
 
     var nextState = this._calculateState(nextProps, this.state);
 
-    if (this.state.scrollY !== nextState.scrollY) {
+    if (this.state.scrollY !== nextState.scrollY && scrollToRowWithOffset) {
 
       var baseScrollAmount = 50,
           scrollAmount = baseScrollAmount + 60;
@@ -417,7 +421,7 @@ var FixedDataTable = React.createClass({
     var currentValue;
     var iterationCount = 0; // the current frame
     var change = end - start;
-    var totalIterations = 60 / 2; // ~60 animation frames/sec
+    var totalIterations = 12 / 2; // ~12 animation frames/sec
 
     var self = this;
 

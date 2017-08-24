@@ -97,14 +97,15 @@ var FixedDataTableCellGroupImpl = React.createClass({
   /*object*/columnProps,
   /*number*/left,
   /*string*/key) /*object*/{
-
     var cellIsResizable = columnProps.isResizable && this.props.onColumnResize;
     var onColumnResize = cellIsResizable ? this.props.onColumnResize : null;
-
     var className = columnProps.cellClassName;
+
+    var cell = (rowIndex && this.props.isScrollingVertical && columnProps.cellScrollingRenderer) ? columnProps.cellScrollingRenderer : columnProps.cell;
 
     return React.createElement(FixedDataTableCell, {
       isScrolling: this.props.isScrolling,
+      isScrollingVertical: this.props.isScrollingVertical,
       align: columnProps.align,
       className: className,
       height: height,
@@ -116,7 +117,7 @@ var FixedDataTableCellGroupImpl = React.createClass({
       columnKey: columnProps.columnKey,
       width: columnProps.width,
       left: left,
-      cell: columnProps.cell
+      cell: cell
     });
   },
 

@@ -112,6 +112,7 @@ var FixedDataTableBufferedRows = React.createClass({
       this._staticRowArray[i] = React.createElement(FixedDataTableRow, {
         key: i,
         isScrolling: props.isScrolling,
+        isScrollingVertical: props.isScrollingVertical,
         index: rowIndex,
         width: props.width,
         height: currentRowHeight,

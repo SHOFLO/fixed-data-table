@@ -383,7 +383,10 @@ var TransitionTable = React.createClass({
 
   _transformColumn: function _transformColumn(column, tableProps, key) {
 
+    var isScrollingVertical = this.props.isScrollingVertical;
     var props = column.props;
+
+    var cellRenderer = props.cellRenderer;
 
     if (column.type.__TableColumn__) {
       // Constuct the cell to be used using the rowGetter
@@ -408,7 +411,7 @@ var TransitionTable = React.createClass({
           width: props.width,
           columnData: props.columnData || EMPTY_OBJECT,
           cellDataGetter: props.cellDataGetter,
-          cellRenderer: props.cellRenderer
+          cellRenderer: cellRenderer
         }),
         footer: React.createElement(TransitionCell, {
           isFooterCell: true,

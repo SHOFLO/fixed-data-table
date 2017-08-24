@@ -145,7 +145,7 @@ var FixedDataTableCell = React.createClass({
     if (React.isValidElement(props.cell)) {
       content = React.cloneElement(props.cell, cellProps);
     } else if (typeof props.cell === 'function') {
-      content = props.cell(cellProps);
+      content = props.cell(cellProps)
     } else {
       content = React.createElement(
         FixedDataTableCellDefault,

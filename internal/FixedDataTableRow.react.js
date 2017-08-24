@@ -107,6 +107,7 @@ var FixedDataTableRowImpl = React.createClass({
     var fixedColumns = React.createElement(FixedDataTableCellGroup, {
       key: 'fixed_cells',
       isScrolling: this.props.isScrolling,
+      isScrollingVertical: this.props.isScrollingVertical,
       height: this.props.height,
       left: 0,
       width: fixedColumnsWidth,
@@ -117,9 +118,11 @@ var FixedDataTableRowImpl = React.createClass({
       rowIndex: this.props.index
     });
     var columnsShadow = this._renderColumnsShadow(fixedColumnsWidth);
+
     var scrollableColumns = React.createElement(FixedDataTableCellGroup, {
       key: 'scrollable_cells',
       isScrolling: this.props.isScrolling,
+      isScrollingVertical: this.props.isScrollingVertical,
       height: this.props.height,
       left: this.props.scrollLeft,
       offsetLeft: fixedColumnsWidth,

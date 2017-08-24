@@ -552,6 +552,7 @@ var FixedDataTable = React.createClass({
     var header = React.createElement(FixedDataTableRow, {
       key: 'header',
       isScrolling: this._isScrolling,
+      isScrollingVertical: this._isScrollingVertical,
       className: joinClasses(cx('fixedDataTableLayout/header'), cx('public/fixedDataTable/header')),
       width: state.width,
       height: state.headerHeight,
@@ -611,6 +612,7 @@ var FixedDataTable = React.createClass({
 
     return React.createElement(FixedDataTableBufferedRows, {
       isScrolling: this._isScrolling,
+      isScrollingVertical: this._isScrollingVertical,
       defaultRowHeight: state.rowHeight,
       firstRowIndex: state.firstRowIndex,
       firstRowOffset: state.firstRowOffset,
@@ -936,10 +938,15 @@ var FixedDataTable = React.createClass({
       if (!this._isScrolling) {
         this._didScrollStart();
       }
+
       var x = this.state.scrollX;
       if (Math.abs(deltaY) > Math.abs(deltaX) && this.props.overflowY !== 'hidden') {
+        this._isScrollingVertical = true;
         var scrollState = this._scrollHelper.scrollBy(Math.round(deltaY));
         var maxScrollY = Math.max(0, scrollState.contentHeight - this.state.bodyHeight);
+        //console.log(scrollState.index, this.state.firstRowIndex, deltaY, maxScrollY)
+        //console.log(scrollState.index - this.state.firstRowIndex)
+        //console.log(deltaY)
         this.setState({
           firstRowIndex: scrollState.index,
           firstRowOffset: scrollState.offset,
@@ -955,6 +962,8 @@ var FixedDataTable = React.createClass({
           scrollX: x
         });
       }
+
+      this._isScrollingVertical = false;
 
       this._didScrollStop();
     }
@@ -998,10 +1007,13 @@ var FixedDataTable = React.createClass({
   },
 
   _didScrollStop: function _didScrollStop() {
+
     if (this.isMounted() && this._isScrolling) {
       this._isScrolling = false;
       this.setState({ redraw: true });
+
       if (this.props.onScrollEnd) {
+
         this.props.onScrollEnd(this.state.scrollX, this.state.scrollY);
       }
     }

@@ -940,13 +940,14 @@ var FixedDataTable = React.createClass({
       }
 
       var x = this.state.scrollX;
-      if (Math.abs(deltaY) > Math.abs(deltaX) && this.props.overflowY !== 'hidden') {
-        this._isScrollingVertical = true;
+      var absDeltaY = Math.abs(deltaY)
+      if (absDeltaY > Math.abs(deltaX) && this.props.overflowY !== 'hidden') {
+
+        this._isScrollingVertical = true
+
         var scrollState = this._scrollHelper.scrollBy(Math.round(deltaY));
         var maxScrollY = Math.max(0, scrollState.contentHeight - this.state.bodyHeight);
-        //console.log(scrollState.index, this.state.firstRowIndex, deltaY, maxScrollY)
-        //console.log(scrollState.index - this.state.firstRowIndex)
-        //console.log(deltaY)
+
         this.setState({
           firstRowIndex: scrollState.index,
           firstRowOffset: scrollState.offset,

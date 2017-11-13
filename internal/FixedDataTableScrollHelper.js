@@ -253,7 +253,6 @@ storedHeights) {
         };
       } else if (position >= this._contentHeight - this._viewportHeight) {
 
-        debugger;
         // If position is equal to or greater than max scroll value, we need
         // to make sure to have bottom border of last row visible.
         var rowIndex = this._rowCount - 1;

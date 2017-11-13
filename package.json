@@ -1,6 +1,6 @@
 {
   "name": "@shoflo/fixed-data-table",
-  "version": "0.6.2-shoflo-11.13.2017",
+  "version": "0.6.3-shoflo-11.13.2017",
   "description": "A React table component designed to allow presenting thousands of rows of data.",
   "main": "main.js",
   "peerDependencies": {

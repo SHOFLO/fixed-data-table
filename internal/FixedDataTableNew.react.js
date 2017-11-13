@@ -781,7 +781,17 @@ var FixedDataTable = React.createClass({
       // Number of rows changed, try to scroll to the row from before the
       // change
       var viewportHeight = (props.height === undefined ? props.maxHeight : props.height) - (props.headerHeight || 0) - (props.footerHeight || 0) - (props.groupHeaderHeight || 0);
-      this._scrollHelper = new FixedDataTableScrollHelper(props.rowsCount, props.rowHeight, viewportHeight, props.rowHeightGetter);
+
+      /**
+       * SHOFLO Modification - we are now passing in the old heights (storedHeights) from previous state to avoid
+       * recalculation and a bug in the FDT that sometimes causes the scroll position to be off.
+       * The "normal" FDT was setting the position to the bottom because it was using the default row
+       * height upon initialization for everything except the rows in the viewport.
+       *
+       * Changed in support of:
+       * https://github.com/SHOFLO/Issues/issues/3324
+       */
+      this._scrollHelper = new FixedDataTableScrollHelper(props.rowsCount, props.rowHeight, viewportHeight, props.rowHeightGetter, this._scrollHelper._storedHeights);
       var scrollState = this._scrollHelper.scrollToRow(firstRowIndex, firstRowOffset);
       firstRowIndex = scrollState.index;
       firstRowOffset = scrollState.offset;

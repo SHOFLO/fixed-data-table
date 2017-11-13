@@ -32,17 +32,35 @@ var FixedDataTableScrollHelper = (function () {
   /*number*/rowCount,
   /*number*/defaultRowHeight,
   /*number*/viewportHeight,
-  /*?function*/rowHeightGetter) {
+  /*?function*/rowHeightGetter,
+storedHeights) {
     _classCallCheck(this, FixedDataTableScrollHelper);
 
     this._rowOffsets = PrefixIntervalTree.uniform(rowCount, defaultRowHeight);
     this._storedHeights = new Array(rowCount);
+    this._contentHeight = 0;
+
+
+    /**
+     * SHOFLO Modification - we are now passing in the old heights (storedHeights) from previous state to avoid
+     * recalculation and a bug in the FDT that sometimes causes the scroll position to be off.
+     * The "normal" FDT was setting the position to the bottom because it was using the default row
+     * height upon initialization for everything except the rows in the viewport.
+     *
+     * Changed in support of:
+     * https://github.com/SHOFLO/Issues/issues/3324
+     */
     for (var i = 0; i < rowCount; ++i) {
-      this._storedHeights[i] = defaultRowHeight;
+      //Set the store height from existing/passed storedHeights if it exists
+      this._storedHeights[i] = (storedHeights && storedHeights[i]) ?
+        storedHeights[i] :
+        defaultRowHeight;
+      //Set the row offset
+      this._rowOffsets.set(i, this._storedHeights[i]);
+      this._contentHeight += this._storedHeights[i]
     }
     this._rowCount = rowCount;
     this._position = 0;
-    this._contentHeight = rowCount * defaultRowHeight;
     this._defaultRowHeight = defaultRowHeight;
     this._rowHeightGetter = rowHeightGetter ? rowHeightGetter : function () {
       return defaultRowHeight;
@@ -234,6 +252,8 @@ var FixedDataTableScrollHelper = (function () {
           contentHeight: this._contentHeight
         };
       } else if (position >= this._contentHeight - this._viewportHeight) {
+
+        debugger;
         // If position is equal to or greater than max scroll value, we need
         // to make sure to have bottom border of last row visible.
         var rowIndex = this._rowCount - 1;
